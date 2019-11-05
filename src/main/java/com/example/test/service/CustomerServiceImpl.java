@@ -14,23 +14,23 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerServiceDao = customerServiceDao;
     }
 
-    public void insertCustomer(Customer cust) {
+    public void insertCustomer(Customer cust) throws Exception{
         customerServiceDao.insertCustomer(cust);
     }
 
-    public void insertOrder(OrderTrans orderTrans) {
+    public void insertOrder(OrderTrans orderTrans) throws Exception {
         customerServiceDao.insertOrder(orderTrans);
     }
 
-    public Customer RetrieveCustById(int custId) {
+    public Customer RetrieveCustById(int custId) throws Exception {
         return customerServiceDao.RetrieveCustById(custId);
     }
 
-    public List<OrderTrans> RetrieveAllOrderByCustId(int CustId) {
+    public List<OrderTrans> RetrieveAllOrderByCustId(int CustId) throws Exception {
         return customerServiceDao.RetrieveAllOrderByCustId(CustId);
     }
 
-    public String RetrieveOrderStatus(int orderId) {
+    public String RetrieveOrderStatus(int orderId) throws Exception {
         return customerServiceDao.RetrieveOrderStatus(orderId);
     }
 }

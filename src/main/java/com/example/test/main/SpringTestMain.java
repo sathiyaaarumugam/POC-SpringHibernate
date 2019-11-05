@@ -11,7 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.util.List;
 
 public class SpringTestMain {
-    public static void main(String args[]){
+    public static void main(String args[]) throws Exception {
         System.out.println("test main");
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
         CustomerService service = (CustomerService) context.getBean("customerService", CustomerServiceImpl.class);

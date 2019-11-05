@@ -2,10 +2,8 @@ package com.example.test.dao;
 
 import com.example.test.model.Customer;
 import com.example.test.model.OrderTrans;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -17,51 +15,77 @@ public class CustomerServiceDaoImpl implements CustomerServiceDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public void insertCustomer(Customer cust) {
-        Session session=this.sessionFactory.getCurrentSession();
-        Transaction tx=session.beginTransaction();
-        session.save(cust);
-        tx.commit();
+    public void insertCustomer(Customer cust){
+        try {
+            Session session = this.sessionFactory.getCurrentSession();
+            Transaction tx = session.beginTransaction();
+            session.save(cust);
+            tx.commit();
+        } catch (HibernateException e1) {
+          throw e1;
+        }
 
     }
 
-    public void insertOrder(OrderTrans orderTrans) {
+    public void insertOrder(OrderTrans orderTrans){
+        try {
         Session session=this.sessionFactory.getCurrentSession();
         Transaction tx=session.beginTransaction();
         session.save(orderTrans);
         tx.commit();
+        } catch (HibernateException e1) {
+            throw e1;
+        }
     }
 
     public Customer RetrieveCustById(int custId) {
+        Customer cus=null;
+        try{
         Session session=this.sessionFactory.getCurrentSession();
         Transaction tx=session.beginTransaction();
-        String queryTxt = "FROM Customer WHERE custId= :custId";
-        Query query= session.createQuery(queryTxt);
-        query.setParameter("custId",custId);
-        Customer cus= (Customer) query.list().get(0);
-        tx.commit();
+        Criteria criteria = session.createCriteria(Customer.class);
+        criteria.add(Restrictions.eq("custId",custId));
+        List result =criteria.list();
+        if(result!=null && !result.isEmpty()) {
+            cus = (Customer) result.get(0);
+        }
+        } catch (HibernateException e1) {
+            throw e1;
+        }
         return cus;
     }
 
     public List<OrderTrans> RetrieveAllOrderByCustId(int CustId) {
+        List<OrderTrans> result =null;
+        try{
         Session session=this.sessionFactory.getCurrentSession();
         Transaction tx=session.beginTransaction();
-        String queryTxt = "FROM OrderTrans a WHERE a.custId= :custId";
-        Query query= session.createQuery(queryTxt);
-        query.setParameter("custId",CustId);
-        List<OrderTrans> list = query.list();
-        tx.commit();
-        return list;
+        Criteria criteria = session.createCriteria(OrderTrans.class);
+        criteria.add(Restrictions.eq("custId",CustId));
+        result =criteria.list();
+        } catch (HibernateException e1) {
+            throw e1;
+        }
+        return result;
     }
 
     public String RetrieveOrderStatus(int orderId) {
-        Session session=this.sessionFactory.getCurrentSession();
-        Transaction tx=session.beginTransaction();
-        String queryTxt = "select orderStatus FROM OrderTrans a WHERE a.orderId= :orderId";
-        Query query= session.createQuery(queryTxt);
-        query.setParameter("orderId",orderId);
-        String status=(String)query.list().get(0);
-        tx.commit();
+        String status=null;
+        try {
+            Session session = this.sessionFactory.getCurrentSession();
+            Transaction tx=session.beginTransaction();
+            Criteria criteria= session.createCriteria(OrderTrans.class);
+            criteria.add(Restrictions.eq("orderId",orderId));
+            List<OrderTrans> result=criteria.list();
+            if(result!=null && !result.isEmpty()){
+                OrderTrans orderTrans =result.get(0);
+                if(orderTrans!=null) {
+                    status = orderTrans.getOrderStatus();
+                }
+            }
+        }catch (HibernateException e1){
+            throw e1;
+        }
         return status;
     }
 }

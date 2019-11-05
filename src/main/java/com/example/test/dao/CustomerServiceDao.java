@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CustomerServiceDao {
 
-    public void insertCustomer(Customer cust);
-    public void insertOrder(OrderTrans orderTrans);
-    public  Customer RetrieveCustById(int custId);
-    public List<OrderTrans> RetrieveAllOrderByCustId(int CustId);
-    public String RetrieveOrderStatus(int orderId);
+    public void insertCustomer(Customer cust) throws Exception;
+    public void insertOrder(OrderTrans orderTrans) throws Exception;
+    public  Customer RetrieveCustById(int custId) throws Exception;
+    public List<OrderTrans> RetrieveAllOrderByCustId(int CustId) throws Exception;
+    public String RetrieveOrderStatus(int orderId) throws Exception;
 }
